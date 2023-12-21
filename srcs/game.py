@@ -4,7 +4,7 @@ from srcs.blocks import *
 from srcs.settings import *
     
 class Game:
-    def __init__(self, cellcolors, bgcolor = (40, 40, 40), margin = 1):
+    def __init__(self, cellcolors, bgcolor = (40, 40, 40), margin = 1, placesound = 'sounds/place.mp3', spinsound = 'sounds/spin.mp3'):
 
         self.bgcolor = bgcolor
         self.margin = margin
@@ -29,8 +29,8 @@ class Game:
         self.score = 0
         self.placed = 0
 
-        self.placesound = pygame.mixer.Sound("sounds/place.mp3")
-        self.splinsound = pygame.mixer.Sound("sounds/spin.mp3")
+        self.placesound = pygame.mixer.Sound(placesound)
+        self.splinsound = pygame.mixer.Sound(spinsound)
 
     def getRandomBlock(self):
         if len(self.blocks) == 0:
