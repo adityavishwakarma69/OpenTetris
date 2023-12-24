@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from srcs import *
 import pygame
 from pygame.locals import *
@@ -15,7 +17,7 @@ def getHighscore():
 pygame.init()
 pygame.mixer.init()
 settings = Settings()
-screen = pygame.display.set_mode((700, 840))
+screen = pygame.display.set_mode((700, 840), pygame.SCALED)
 pygame.display.set_caption("Tetris")
 event_handle = EventHandler()
 pygame.mixer.music.load(settings.bgmusic())
