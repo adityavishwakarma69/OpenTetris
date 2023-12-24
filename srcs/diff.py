@@ -14,4 +14,4 @@ class Diff:
         if game.score > (self.diffstep * (self.currdiff + 1)):
             if self.currdiff < (len(self.diffs) - 1):
                 self.currdiff += 1
-                self.timer.new(self.diffs[self.currdiff]) 
+                self.timer.new(self.diffs[self.currdiff])
