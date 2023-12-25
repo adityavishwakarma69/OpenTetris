@@ -23,6 +23,9 @@ class Game:
 
         self.current_block = self.getRandomBlock()
         self.next_block = self.getRandomBlock()
+        self.prev_block = self.current_block.new()
+        self.prev_block.ispreview = True
+        
         self.saved_block = None
         self.gameover = False
         self.canswap = True
@@ -48,16 +51,16 @@ class Game:
         self.blocks.remove(block)
         return block
 
-    def blockInside(self):
-        tiles = self.current_block.getcellpos()
+    def blockInside(self, block):
+        tiles = block.getcellpos()
         for tile in tiles:
             if not self.grid.isInside(tile.row, tile.col):
                 return False
 
         return True
 
-    def blockCollide(self):
-        tiles = self.current_block.getcellpos()
+    def blockCollide(self, block):
+        tiles = block.getcellpos()
         for tile in tiles:
             if self.grid.isCollide(tile.row, tile.col):
                 return True
@@ -70,7 +73,10 @@ class Game:
 
         self.current_block = self.next_block
         self.next_block = self.getRandomBlock()
-        if self.blockCollide():
+        self.prev_block = self.current_block.new()
+        self.prev_block.ispreview = True
+        
+        if self.blockCollide(self.current_block):
             self.gameover = True
             with open("data/scores.txt", 'a') as file:
                 file.write(str(self.score) + '\n')
@@ -83,7 +89,7 @@ class Game:
 
     def moveLeft(self):
         self.current_block.move(0, -1)
-        if not self.blockInside() or self.blockCollide():
+        if not self.blockInside(self.current_block) or self.blockCollide(self.current_block):
             self.current_block.move(0, 1)
             return False
 
@@ -91,7 +97,7 @@ class Game:
 
     def moveRight(self):
         self.current_block.move(0, 1)
-        if not self.blockInside() or self.blockCollide():
+        if not self.blockInside(self.current_block) or self.blockCollide(self.current_block):
             self.current_block.move(0, -1)
             return False
 
@@ -99,7 +105,7 @@ class Game:
 
     def moveDown(self):
         self.current_block.move(1, 0)
-        if (not self.blockInside()) or self.blockCollide():
+        if (not self.blockInside(self.current_block)) or self.blockCollide(self.current_block):
             self.current_block.move(-1, 0)
             self.lockBlock()
             return False
@@ -107,15 +113,23 @@ class Game:
         return True
 
     def dashDown(self):
-        while self.blockInside() and not self.blockCollide():
+        while self.blockInside(self.current_block) and not self.blockCollide(self.current_block):
             self.current_block.move(1, 0)
 
         self.current_block.move(-1, 0)
         self.lockBlock()
 
+    def preview(self):
+        self.prev_block.offset.col = self.current_block.offset.col
+        self.prev_block.rotation_state = self.current_block.rotation_state
+        while self.blockInside(self.prev_block) and not self.blockCollide(self.prev_block):
+            self.prev_block.move(1, 0)
+
+        self.prev_block.move(-1, 0)
+
     def rotate(self):
         self.current_block.rotate()
-        if not self.blockInside() or self.blockCollide():
+        if not self.blockInside(self.current_block) or self.blockCollide(self.current_block):
             self.current_block.rotate(clockwise = False)
             if not self.moveLeft():
                 self.moveRight()
@@ -130,6 +144,9 @@ class Game:
                 self.current_block = self.next_block
                 self.next_block = self.getRandomBlock()
 
+        self.prev_block = self.current_block.new()
+        self.prev_block.ispreview = True
+
         self.canswap = False
 
     def draw(self, surface):
@@ -137,6 +154,7 @@ class Game:
         self.grid.surface.fill(self.bgcolor)
         self.grid.draw()
         self.current_block.draw(self.grid.surface)
+        self.prev_block.draw(self.grid.surface)
         surface.blit(self.grid.surface, (20, 20))
 
     def reset(self):

@@ -60,6 +60,17 @@ def game():
     fps = 60
     dt = 0 
     cont = -1
+
+    keys = {
+            'rotate' : globals()[settings.key('rotate')],
+            'place' : globals()[settings.key('place')],
+            'save' : globals()[settings.key('saveblock')],
+            'pause' : globals()[settings.key('pause')],
+            'right' : globals()[settings.key('moveright')],
+            'left' : globals()[settings.key('moveleft')],
+            'down' : globals()[settings.key('rotate')],
+            }
+
     while not (game.gameover or event_handle.shouldquit):
         event_handle.getEvents()
 
@@ -68,29 +79,24 @@ def game():
             print("play")
             pygame.mixer.music.play(-1) 
 
-        
-        if event_handle.keydown == K_UP:
+        if event_handle.keydown == keys['rotate']:
             game.rotate()
-        elif event_handle.keydown == K_DOWN:
+        elif event_handle.keydown == keys['down']:
             game.moveDown()
-        elif event_handle.keydown == K_RETURN:
+        elif event_handle.keydown == keys['place']:
             game.dashDown()
-        elif event_handle.keydown == K_c:
+        elif event_handle.keydown == keys['save']:
             game.swap()
-        elif event_handle.keydown == K_RIGHT:
+        elif event_handle.keydown == keys['right']:
             game.moveRight()
-        elif event_handle.keydown == K_LEFT:
+        elif event_handle.keydown == keys['left']:
             game.moveLeft()
-        elif event_handle.keydown == K_ESCAPE:
+        elif event_handle.keydown == keys['pause']:
             cont = pause()
-        
-
-        if K_z in event_handle.pressed:
-            game.moveLeft()
-        if K_x in event_handle.pressed:
-            game.moveRight() 
+         
 
         diff.update(game, dt)
+        game.preview()
         
         #draw
         game.draw(screen)
@@ -158,6 +164,7 @@ def pause():
             TextButton("Quit", 80, sec_colors = ((255, 180, 180), None)),
             ]
     hover = 0
+    pygame.mixer.music.pause()
     while not event_handle.shouldquit:
         event_handle.getEvents()
         if event_handle.keydown == K_DOWN:

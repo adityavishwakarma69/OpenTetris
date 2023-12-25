@@ -17,6 +17,7 @@ class Block:
         self.colors = self.settings.getCellColors()
         self.margin = margin
         self.offset = Pos(0, 3)
+        self.ispreview = False
 
     def move(self, rows, cols):
         self.offset.row += rows
@@ -51,8 +52,12 @@ class Block:
         tiles = self.getcellpos()
         for tile in tiles:
             cell_rect = pygame.Rect(tile.col * self.cellsize + self.margin, tile.row * self.cellsize + self.margin, self.cellsize - self.margin, self.cellsize - self.margin)
+
             cell_color = self.colors[self.id]
-            pygame.draw.rect(surface, cell_color, cell_rect)
+            if not self.ispreview:
+                pygame.draw.rect(surface, cell_color, cell_rect)
+            else:
+                pygame.draw.rect(surface, cell_color, cell_rect, 1)
 
 
 class LBlock(Block):

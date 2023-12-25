@@ -15,6 +15,7 @@ class Settings:
         self.diffsec = self.config['DIFF']
         self.optsec = self.config['OPTIONS']
         self.filesec = self.config['FILES']
+        self.keysec = self.config['KEYS']
 
     def getdiffthold(self):
         return int(self.optsec['progress_period'])
@@ -57,3 +58,6 @@ class Settings:
 
     def margin(self):
         return int(self.vissec['margin'])
+
+    def key(self, name):
+        return self.keysec[name]
