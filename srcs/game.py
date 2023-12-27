@@ -4,21 +4,22 @@ from srcs.blocks import *
 from srcs.settings import *
     
 class Game:
-    def __init__(self, cellcolors, bgcolor = (40, 40, 40), margin = 1, placesound = 'sounds/place.mp3', spinsound = 'sounds/spin.mp3'):
+    def __init__(self, cellcolors, cellsize, bgcolor = (40, 40, 40), margin = 1, placesound = 'sounds/place.mp3', spinsound = 'sounds/spin.mp3'):
 
         self.bgcolor = bgcolor
         self.margin = margin
         self.cellcolors = cellcolors
+        self.cellsize = cellsize
 
-        self.grid = Grid(20, 10, 40, self.cellcolors, margin = self.margin)
+        self.grid = Grid(20, 10, self.cellsize, self.cellcolors, margin = self.margin)
         self.blocks = [
-                IBlock(40, self.cellcolors, self.margin),
-                JBlock(40, self.cellcolors, self.margin),
-                LBlock(40, self.cellcolors, self.margin),
-                OBlock(40, self.cellcolors, self.margin),
-                SBlock(40, self.cellcolors, self.margin),
-                TBlock(40, self.cellcolors, self.margin),
-                ZBlock(40, self.cellcolors, self.margin)
+                IBlock(self.cellsize, self.cellcolors, self.margin),
+                JBlock(self.cellsize, self.cellcolors, self.margin),
+                LBlock(self.cellsize, self.cellcolors, self.margin),
+                OBlock(self.cellsize, self.cellcolors, self.margin),
+                SBlock(self.cellsize, self.cellcolors, self.margin),
+                TBlock(self.cellsize, self.cellcolors, self.margin),
+                ZBlock(self.cellsize, self.cellcolors, self.margin)
                 ]
 
         self.current_block = self.getRandomBlock()
@@ -38,13 +39,13 @@ class Game:
     def getRandomBlock(self):
         if len(self.blocks) == 0:
             self.blocks = [
-                IBlock(40, self.cellcolors, self.margin),
-                JBlock(40, self.cellcolors, self.margin),
-                LBlock(40, self.cellcolors, self.margin),
-                OBlock(40, self.cellcolors, self.margin),
-                SBlock(40, self.cellcolors, self.margin),
-                TBlock(40, self.cellcolors, self.margin),
-                ZBlock(40, self.cellcolors, self.margin)
+                IBlock(self.cellsize, self.cellcolors, self.margin),
+                JBlock(self.cellsize, self.cellcolors, self.margin),
+                LBlock(self.cellsize, self.cellcolors, self.margin),
+                OBlock(self.cellsize, self.cellcolors, self.margin),
+                SBlock(self.cellsize, self.cellcolors, self.margin),
+                TBlock(self.cellsize, self.cellcolors, self.margin),
+                ZBlock(self.cellsize, self.cellcolors, self.margin)
                 ]
 
         block = random.choice(self.blocks)
@@ -113,10 +114,11 @@ class Game:
         return True
 
     def dashDown(self):
-        while self.blockInside(self.current_block) and not self.blockCollide(self.current_block):
-            self.current_block.move(1, 0)
+        #while self.blockInside(self.current_block) and not self.blockCollide(self.current_block):
+        #    self.current_block.move(1, 0)
 
-        self.current_block.move(-1, 0)
+        #self.current_block.move(-1, 0)
+        self.current_block.offset = self.prev_block.offset
         self.lockBlock()
 
     def preview(self):
