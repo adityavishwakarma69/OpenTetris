@@ -120,7 +120,7 @@ def game():
             cont = pause()
          
 
-        diff.update(game, dt)
+        udate = diff.update(game, dt)
         game.preview()
 
         #draw
