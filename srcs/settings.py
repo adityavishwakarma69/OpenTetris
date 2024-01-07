@@ -67,3 +67,9 @@ class Settings:
 
     def key(self, name):
         return self.keysec[name]
+
+    def scaletype(self):
+        return self.optsec['scale_type']
+
+    def scalefactor(self):
+        return float(self.optsec['scale_factor'])

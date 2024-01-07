@@ -8,6 +8,7 @@ from srcs import *
 import pygame
 from pygame.locals import *
 import platform
+import sys
 
 ## Detecting Os for scaling purposes
 kernalof = platform.system()
@@ -37,14 +38,23 @@ settings = Settings()   ## Creating Settings object (TO DO : implement Calls met
 infoObject = pygame.display.Info()  ## Detecting Resolution for scaling purposes
 print(f"resolution: {infoObject.current_w}x{infoObject.current_h}") ## Stdout Detected Resolution
 ## Finding the scaling factors
-scalex = infoObject.current_w/1920
-scaley = infoObject.current_h/1080
+print("scaletype :", settings.scaletype())
+try:
+        i = sys.argv.index('-r')
+        scalex = scaley = float(sys.argv[i + 1])
+except:
+    if settings.scaletype() == 'auto':
+        scalex = infoObject.current_w/1920
+        scaley = infoObject.current_h/1080
+
+    else:scalex = scaley = settings.scalefactor()
+
 
 ## Stdout scaling
 if scaley == scalex and scalex == 1:
     print("Scaling is disabled")
 else:
-    print(f"Scaling is enabled (Software) {round(scalex, 2)}i+{round(scaley, 2)}j")
+    print(f"Scaling is enabled (Logical) {round(scalex, 2)}i+{round(scaley, 2)}j")
 
 screen = pygame.display.set_mode((int(700 * scalex), int(840 * scaley)))# Display Window
 pygame.display.set_caption("Tetris")                                    #
