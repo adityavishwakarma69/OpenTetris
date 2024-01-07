@@ -22,6 +22,6 @@ TO DO
 
 * Add mouse events 
 
-* Import movement Controls
+* Improve movement Controls
 
 * Make settings menu
