@@ -1,3 +1,8 @@
+#Aditya Vishwakarma, hereby disclaims all copyright interest in this program (which deconstructs trees) written by Aditya Vishwakarma.
+
+#signature of Aditya Vishwakarma
+
+
 import random
 from srcs.grid import *
 from srcs.blocks import *

@@ -1,3 +1,7 @@
+#Aditya Vishwakarma, hereby disclaims all copyright interest in this program (which deconstructs trees) written by Aditya Vishwakarma.
+
+#signature of Aditya Vishwakarma
+
 import pygame
 from pygame.locals import *
 

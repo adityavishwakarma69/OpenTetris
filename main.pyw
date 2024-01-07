@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 
+#Aditya Vishwakarma, hereby disclaims all copyright interest in this program (which deconstructs trees) written by Aditya Vishwakarma.
+
+#signature of Aditya Vishwakarma
+
 from srcs import *
 import pygame
 from pygame.locals import *
+import platform
 
-try:
+## Detecting Os for scaling purposes
+kernalof = platform.system()
+print("Kernal/OS -", kernalof)
+if kernalof == 'Windows':   ## Making the process DPI Aware if Kernal is Win32
     import ctypes
     ctypes.windll.user32.SetProcessDPIAware()
-except:
-    pass
 
 
+## Reads the scores file and finds the highscore
+## (TO DO) implement Cache
 def getHighscore():
     try:
         with open("data/scores.txt", 'r') as file:
@@ -23,23 +31,33 @@ def getHighscore():
 
 pygame.init()
 pygame.mixer.init()
-settings = Settings()
 
-infoObject = pygame.display.Info()
-print(infoObject.current_w, infoObject.current_h)
+settings = Settings()   ## Creating Settings object (TO DO : implement Calls methods)
+
+infoObject = pygame.display.Info()  ## Detecting Resolution for scaling purposes
+print(f"resolution: {infoObject.current_w}x{infoObject.current_h}") ## Stdout Detected Resolution
+## Finding the scaling factors
 scalex = infoObject.current_w/1920
 scaley = infoObject.current_h/1080
-screen = pygame.display.set_mode((int(700 * scalex), int(840 * scaley)))
 
-pygame.display.set_caption("Tetris")
+## Stdout scaling
+if scaley == scalex and scalex == 1:
+    print("Scaling is disabled")
+else:
+    print(f"Scaling is enabled (Software) {round(scalex, 2)}i+{round(scaley, 2)}j")
 
-event_handle = EventHandler()
-pygame.mixer.music.load(settings.bgmusic())
+screen = pygame.display.set_mode((int(700 * scalex), int(840 * scaley)))# Display Window
+pygame.display.set_caption("Tetris")                                    #
 
+event_handle = EventHandler()   ## Event object (TO DO : implement global mouse positioning)
+pygame.mixer.music.load(settings.bgmusic()) ## Loading BG music in mixer
+
+## gameplay loop ## game surface
 def game():
     cellcolors = settings.getCellColors()
     margin = settings.margin()
 
+    ## UI ELEMENTS
     game = Game(cellcolors,
                 int(40 * scaley),
                 margin = margin,
@@ -80,12 +98,11 @@ def game():
 
     diff = Diff(settings.getdiffs(), settings.getdiffthold())
 
- 
     clock = pygame.time.Clock()
     fps = 60
     dt = 0 
-    cont = -1
-
+    cont = -1  ## For pause menu (-1 : last frame was game , 0 : last frame was pause, 1: exit)
+    ## getting keys
     keys = {
             'rotate' : globals()[settings.key('rotate')],
             'place' : globals()[settings.key('place')],
@@ -96,14 +113,16 @@ def game():
             'down' : globals()[settings.key('rotate')],
             }
 
+    ## GAME LOOP STARTS
     while not (game.gameover or event_handle.shouldquit):
-        event_handle.getEvents()
+        event_handle.getEvents()    ##Getting Events
 
         
-        if not pygame.mixer.music.get_busy():
+        if not pygame.mixer.music.get_busy():   ##Playing bgmusic <=> nothing is playing in mixer
             print("play")
             pygame.mixer.music.play(-1) 
 
+        ## Checking for game events
         if event_handle.keydown == keys['rotate']:
             game.rotate()
         elif event_handle.keydown == keys['down']:
@@ -118,18 +137,20 @@ def game():
             game.moveLeft()
         elif event_handle.keydown == keys['pause']:
             cont = pause()
-         
 
-        udate = diff.update(game, dt)
-        game.preview()
 
-        #draw
+        udate = diff.update(game, dt)   ## falling of block 
+        game.preview()                  ## preview block
+
+        #drawing surfaces
         game.draw(screen)
         scoreboard.draw(screen)
         nextboard.draw(screen)
         savedboard.draw(screen)
 
-        pygame.display.flip()
+        pygame.display.flip()   #Update screen
+
+        ## Clock update based on pause menu
         if cont == 0:
             cont = -1
             dt = 0
@@ -139,7 +160,9 @@ def game():
         elif cont == -1:
             dt = clock.tick(fps)
 
+## Menu loop
 def menu():
+    ## Buttons and Text surfaces
     title = TextButton("Tetris", int(120 * scalex), ((193, 139, 180), None))
     buttons = [
             TextButton("Play", int(80 * scalex), sec_colors = ((255, 180, 180), None)),
@@ -148,10 +171,14 @@ def menu():
             ]
     hover = 0
     highscore_text = getTextSurf("HIGHSCORE : " + str(getHighscore()), int(30 * scalex), (255, 255, 255))
+
+    ## Main loop starts
     while not event_handle.shouldquit:
-        event_handle.getEvents()
-        if pygame.mixer.music.get_busy:
+        event_handle.getEvents()    ## Updating Events
+        if pygame.mixer.music.get_busy: ## Stoping the mixer if music is playing
             pygame.mixer.music.stop()
+
+        ## Events and buttons
         if event_handle.keydown == K_DOWN:
             hover += 1
             if hover == len(buttons):
@@ -168,6 +195,7 @@ def menu():
             elif hover == 2:
                 event_handle.shouldquit = True
 
+        #Drawing surfaces
         screen.fill(settings.color('bg'))
 
         for i in range(len(buttons)):
@@ -178,9 +206,9 @@ def menu():
         title.draw(screen, (int(350 * scalex), int(100 * scaley)))
         screen.blit(highscore_text, (0, 0))
 
-        pygame.display.flip()
+        pygame.display.flip()   ##Updating the screen
 
-def pause():
+def pause():    ## Same trend as menu
     title = TextButton("Tetris", int(120 * scalex), ((193, 139, 180), None))
     buttons = [
             TextButton("Continue", int(80 * scalex), sec_colors = ((255, 180, 180), None)),
@@ -221,4 +249,4 @@ def pause():
 
 
 if __name__ == "__main__":
-    menu()
+    menu()  ## Menu the the parent loop

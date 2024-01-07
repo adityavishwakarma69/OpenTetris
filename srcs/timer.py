@@ -1,3 +1,8 @@
+#Aditya Vishwakarma, hereby disclaims all copyright interest in this program (which deconstructs trees) written by Aditya Vishwakarma.
+
+#signature of Aditya Vishwakarma
+
+
 class Timer:
     def __init__(self, threshold):
         self.timer = 0
