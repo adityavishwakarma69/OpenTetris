@@ -4,6 +4,7 @@
 
 from srcs.timer import *
 
+## Difficulty Class (## Creates a time and moves the current block accordingly)
 class Diff:
     def __init__(self, diffs, diffstep):
         self.diffs = diffs

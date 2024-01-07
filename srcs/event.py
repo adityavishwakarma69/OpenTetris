@@ -5,6 +5,8 @@
 import pygame
 from pygame.locals import *
 
+
+## Class to handle Event (no mouse event supported for now)
 class EventHandler:
     def __init__(self):
         self.keydown = None

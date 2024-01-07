@@ -6,7 +6,7 @@
 import pygame
 from srcs.blocks import *
 
-
+## THIS WHOLE THING IS BULLCRAP DON'T READ (TO DO : REWORK ui)
 def getTextSurf(text, size, color, bgcolor = None, fontname = None, aal = True):
     font = pygame.font.SysFont(fontname, size)
     surf = font.render(text, aal, color, bgcolor)

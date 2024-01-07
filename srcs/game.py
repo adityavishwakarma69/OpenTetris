@@ -7,7 +7,8 @@ import random
 from srcs.grid import *
 from srcs.blocks import *
 from srcs.settings import *
-    
+
+## Class of game
 class Game:
     def __init__(self, cellcolors, cellsize, bgcolor = (40, 40, 40), margin = 1, placesound = 'sounds/place.mp3', spinsound = 'sounds/spin.mp3'):
 
@@ -39,9 +40,9 @@ class Game:
         self.placed = 0
 
         self.placesound = pygame.mixer.Sound(placesound)
-        self.splinsound = pygame.mixer.Sound(spinsound)
+        self.spinsound = pygame.mixer.Sound(spinsound)
 
-    def getRandomBlock(self):
+    def getRandomBlock(self):   ## Returns a random blocks and deletes it from available blocks
         if len(self.blocks) == 0:
             self.blocks = [
                 IBlock(self.cellsize, self.cellcolors, self.margin),
@@ -57,6 +58,7 @@ class Game:
         self.blocks.remove(block)
         return block
 
+    ## Check if block is inside the grid or not
     def blockInside(self, block):
         tiles = block.getcellpos()
         for tile in tiles:
@@ -65,13 +67,15 @@ class Game:
 
         return True
 
+    ## Check if block overlapps an exisiting block in the grid
     def blockCollide(self, block):
         tiles = block.getcellpos()
         for tile in tiles:
             if self.grid.isCollide(tile.row, tile.col):
                 return True
         return False
-    
+
+    ## Writes the block in the grid and gets new blocks
     def lockBlock(self):
         tiles = self.current_block.getcellpos()
         for pos in tiles:
@@ -93,6 +97,7 @@ class Game:
         self.placed += 1
         self.placesound.play()
 
+    ## Movement functions
     def moveLeft(self):
         self.current_block.move(0, -1)
         if not self.blockInside(self.current_block) or self.blockCollide(self.current_block):
@@ -126,6 +131,7 @@ class Game:
         self.current_block.offset = self.prev_block.offset
         self.lockBlock()
 
+    ## Where will the block be placed if dashed ? Here
     def preview(self):
         self.prev_block.offset.col = self.current_block.offset.col
         self.prev_block.rotation_state = self.current_block.rotation_state
@@ -134,7 +140,7 @@ class Game:
 
         self.prev_block.move(-1, 0)
 
-    def rotate(self):
+    def rotate(self):  ## Rotates the current block
         self.current_block.rotate()
         if not self.blockInside(self.current_block) or self.blockCollide(self.current_block):
             self.current_block.rotate(clockwise = False)
@@ -142,9 +148,9 @@ class Game:
                 self.moveRight()
             self.current_block.rotate()
 
-        self.splinsound.play()
+        self.spinsound.play()
 
-    def swap(self):
+    def swap(self): ## Swap the current block for the saved one
         if self.canswap: 
             self.saved_block, self.current_block = self.current_block.new(), self.saved_block
             if self.current_block == None:
@@ -156,7 +162,7 @@ class Game:
 
         self.canswap = False
 
-    def draw(self, surface):
+    def draw(self, surface):  ## Draws every component of game except UI
         surface.fill(self.bgcolor)
         self.grid.surface.fill(self.bgcolor)
         self.grid.draw()
@@ -164,5 +170,5 @@ class Game:
         self.prev_block.draw(self.grid.surface)
         surface.blit(self.grid.surface, (20, 20))
 
-    def reset(self):
+    def reset(self):  ## Resets the game (Depracated)
         return type(self)(cellcolors = self.cellcolors, bgcolor = self.bgcolor, margin = self.margin)

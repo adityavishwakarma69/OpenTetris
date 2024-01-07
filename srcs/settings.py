@@ -6,6 +6,7 @@
 import configparser
 from ast import literal_eval
 
+## Whole Thing is trivial so not more comments here
 class Settings:
     def __init__(self):
         self.config = configparser.ConfigParser()

@@ -13,3 +13,15 @@ Run main.pyw like a normal application
 
 *COPYING*
 Follow the LICENCE :)
+
+TO DO 
+
+* Rework UI 
+
+* Add texture support
+
+* Add mouse events 
+
+* Import movement Controls
+
+* Make settings menu
